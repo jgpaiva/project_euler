@@ -13,11 +13,8 @@ def primes():
     primes = [2, 3, 5, 7]
     for i in primes:
         yield i
-    for i in naturals(primes[-1]):
-        for p in primes:
-            if is_divisible(i, p):
-                break
-        else:
+    for i in naturals(primes[-1] + 1):
+        if not any(is_divisible(i, p) for p in primes):
             yield i
             primes.append(i)
 
