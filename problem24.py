@@ -1,5 +1,5 @@
 def genlist(nums, lsts):
-    if len(nums) == 0:
+    if not nums:
         return lsts
 
     top = nums.pop()
