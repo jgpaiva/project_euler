@@ -1,5 +1,7 @@
 from itertools import count
 
+# this was fun, but it doesn't work
+
 
 digits = [1, 3, 7, 9]
 primes_cache = [2, 3, 5, 7]
