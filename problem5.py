@@ -18,13 +18,12 @@ def primes():
 
 
 def prime_decomposition(num):
-    c_num = num
     decomp = defaultdict(int)
     for i in primes():
-        while is_divisible(c_num, i):
-            c_num = c_num / i
+        while is_divisible(num, i):
+            num = num / i
             decomp[i] += 1
-        if c_num == 1:
+        if num == 1:
             break
     return decomp
 
@@ -35,5 +34,21 @@ for i in xrange(1, num + 1):
         if decomp[p] < o:
             decomp[p] = o
 
-print(reduce(lambda x, y: x * y,
-      map(lambda x: x[0] ** x[1], decomp.iteritems())))
+
+def v1():
+    return reduce(lambda x, y: x * y,
+                  map(lambda x: x[0] ** x[1], decomp.iteritems()))
+print(v1())
+
+
+from operator import mul
+from itertools import starmap
+
+
+def v2():
+    return reduce(mul, starmap(pow, decomp.iteritems()))
+print(v2())
+
+import timeit
+print(timeit.timeit('v1()', setup='from __main__ import v1', number=100000))
+print(timeit.timeit('v2()', setup='from __main__ import v2', number=100000))

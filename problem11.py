@@ -1,3 +1,4 @@
+import operator
 s_m = """08 02 22 97 38 15 00 40 00 75 04 05 07 78 52 12 50 77 91 08
 49 49 99 40 17 81 18 57 60 87 17 40 98 43 69 48 04 56 62 00
 81 49 31 73 55 79 14 29 93 71 40 67 53 88 30 03 49 13 36 65
@@ -20,39 +21,75 @@ s_m = """08 02 22 97 38 15 00 40 00 75 04 05 07 78 52 12 50 77 91 08
 01 70 54 71 83 51 54 69 16 92 33 48 61 43 52 01 89 19 67 48 """
 
 m = []
+
 for i in xrange(20):
     m.append([None] * 20)
 
 for i, line in enumerate(s_m.split("\n")):
     for j, number in enumerate(line.split()):
         m[i][j] = int(number)
-
 print m
-max_val = -1
-for i in xrange(20):
-    for j in xrange(20 - 4):
-        val = m[i][j] * m[i][j + 1] * m[i][j + 2] * m[i][j + 3]
-        if val > max_val:
-            max_val = val
 
-for i in xrange(20 - 4):
-    for j in xrange(20):
-        val = m[i][j] * m[i + 1][j] * m[i + 2][j] * m[i + 3][j]
-        if val > max_val:
-            max_val = val
 
-for i in xrange(20 - 4):
-    for j in xrange(20 - 4):
-        val = m[i][j] * m[i + 1][j + 1] * \
-            m[i + 2][j + 2] * m[i + 3][j + 3]
-        if val > max_val:
-            max_val = val
+def v1():
+    max_val = -1
+    for i in xrange(20):
+        for j in xrange(20 - 4):
+            val = m[i][j] * m[i][j + 1] * m[i][j + 2] * m[i][j + 3]
+            if val > max_val:
+                max_val = val
 
-for i in xrange(20 - 4):
-    for j in xrange(20 - 4):
-        val = m[i + 3][j] * m[i + 2][j + 1] * \
-            m[i + 1][j + 2] * m[i][j + 3]
-        if val > max_val:
-            max_val = val
+    for i in xrange(20 - 4):
+        for j in xrange(20):
+            val = m[i][j] * m[i + 1][j] * m[i + 2][j] * m[i + 3][j]
+            if val > max_val:
+                max_val = val
 
-print max_val
+    for i in xrange(20 - 4):
+        for j in xrange(20 - 4):
+            val = m[i][j] * m[i + 1][j + 1] * \
+                m[i + 2][j + 2] * m[i + 3][j + 3]
+            if val > max_val:
+                max_val = val
+
+    for i in xrange(20 - 4):
+        for j in xrange(20 - 4):
+            val = m[i + 3][j] * m[i + 2][j + 1] * \
+                m[i + 1][j + 2] * m[i][j + 3]
+            if val > max_val:
+                max_val = val
+
+    return max_val
+print(v1())
+
+
+def mul(it):
+    return reduce(operator.mul, it)
+
+
+def v2():
+    max_val = -1
+    for i in xrange(20):
+        for j in xrange(20 - 4):
+            val = mul(m[i][j + k] for k in xrange(4))
+            if val > max_val:
+                max_val = val
+            val = mul(m[j + k][i] for k in xrange(4))
+            if val > max_val:
+                max_val = val
+
+    for i in xrange(20 - 4):
+        for j in xrange(20 - 4):
+            val = mul(m[i + k][j + k] for k in xrange(4))
+            if val > max_val:
+                max_val = val
+            val = mul(m[i + 3 - k][j + k] for k in xrange(4))
+            if val > max_val:
+                max_val = val
+
+    return max_val
+print(v2())
+
+import timeit
+print(timeit.timeit('v1()', setup='from __main__ import v1', number=1000))
+print(timeit.timeit('v2()', setup='from __main__ import v2', number=1000))
