@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+from itertools import izip
+limit = 1000
 
 
 def parts(num):
@@ -15,15 +16,32 @@ def is_palindrome(num):
     num = parts(num)
     return all(map(lambda x: x[0] == x[1], zip(num, reversed(num))))
 
-print parts(10019012)
-print is_palindrome(10019012)
-print is_palindrome(10001)
-print is_palindrome(1001)
 
-max_pal = 0
-max_num = 1000
-for i in range(1, max_num):
-    for j in range(i, max_num):
-        if is_palindrome(i * j) and i * j > max_pal:
-            max_pal = i * j
-print max_pal
+def is_palindrome2(num):
+    num = parts(num)
+    return all(a == b for a, b in izip(num, reversed(num)))
+
+
+def v1():
+    max_pal = 0
+    for i in range(1, limit):
+        for j in range(i, limit):
+            if is_palindrome(i * j) and i * j > max_pal:
+                max_pal = i * j
+    return max_pal
+print v1()
+
+
+def v2():
+    max_pal = 0
+    for i in range(1, limit):
+        for j in range(i, limit):
+            mul = i * j
+            if mul > max_pal and is_palindrome2(mul):
+                max_pal = mul
+    return max_pal
+print v2()
+
+import timeit
+print(timeit.timeit('v1()', setup='from __main__ import v1', number=10))
+print(timeit.timeit('v2()', setup='from __main__ import v2', number=10))
