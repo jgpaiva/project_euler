@@ -35,7 +35,7 @@ print v1()
 def v2():
     max_pal = 0
     for i in range(1, limit):
-        for j in range(i, limit):
+        for j in range(max(i, max_pal / i), limit):
             mul = i * j
             if mul > max_pal and is_palindrome2(mul):
                 max_pal = mul
